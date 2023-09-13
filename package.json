@@ -9,7 +9,7 @@
     "lint": "rome check .",
     "lint:fix": "rome check --apply .",
     "lint:fix:unsafe": "rome check --apply-unsafe .",
-    "test": "playwright test --ui",
+    "test": "playwright test",
     "test:report": "playwright show-report"
   },
   "keywords": [],
