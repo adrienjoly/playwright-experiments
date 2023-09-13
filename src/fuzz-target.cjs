@@ -1,7 +1,28 @@
 // Usage: $ npx jazzer src/fuzz-target.cjs
 
+/**
+ * Goal:
+ * Given a webpage with a form made of a single field,
+ * The goal of the experiment is to find which value can make it crash
+ */
+
 const TARGET = 5; // Math.round(100 * Math.random());
-const aFunctionThatMayThrow = (guess) => {
+const aFunctionThatMayThrow = (evt) => {
+  const document = {
+    getElementById() {
+      let value = undefined;
+      try {
+        value = JSON.parse(evt).value;
+      } catch (err) {
+        console.error(err);
+      }
+      return { value };
+    },
+  };
+
+  // evt.preventDefault();
+  const guess = document.getElementById("number").value; // TODO: case with parseInt
+  document.getElementById("number").value = "";
   if (guess > TARGET) {
     document.getElementById("feedback").textContent =
       "Your guess is bigger than the target";
@@ -14,10 +35,14 @@ const aFunctionThatMayThrow = (guess) => {
     document.getElementById(
       "feedback"
     ).textContent = `Congrats! The number was ${TARGET}`;
-  } else {
-    throw new Error(`${guess}is not a number`);
+    throw new Error(`Congrats! The number was ${TARGET}`);
   }
+  // else {
+  //   throw new Error(`${guess}is not a number`);
+  // }
 };
+
+// aFunctionThatMayThrow('{"value":5}');
 
 // from https://github.com/CodeIntelligenceTesting/jazzer.js#quickstart
 module.exports.fuzz = function (data /*: Buffer */) {
