@@ -5,6 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "http-server -c-1 tests/dummy-form/",
     "lint": "rome check .",
     "lint:fix": "rome check --apply .",
     "lint:fix:unsafe": "rome check --apply-unsafe .",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
+    "http-server": "^14.1.1",
     "rome": "^12.1.3"
   }
 }
