@@ -1,5 +1,5 @@
 "use strict";
-const TARGET = Math.round(100 * Math.random());
+const TARGET = 5; // Math.round(100 * Math.random());
 document.getElementById("gameForm").addEventListener("submit", (evt) => {
   evt.preventDefault();
   const guess = document.getElementById("number").value; // TODO: case with parseInt
