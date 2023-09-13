@@ -1,11 +1,16 @@
 import { test, expect } from "@playwright/test";
-import type { Protocol } from "playwright-core/types/protocol.d.ts";
 
 type ScriptId = string;
 
 type SourceCode = string;
 
 const sourceFiles = new Map<ScriptId, SourceCode>();
+
+/**
+ * Given a "guess the number" webpage,
+ * The goal of this experiment is to determine the coverage for each provided number,
+ * So we could determine the range of numbers necessary to run all the code of that webpage.
+ */
 
 for (let number = 0; number <= 10; ++number) {
   test(`try number ${number}`, async ({ page }) => {
