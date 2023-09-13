@@ -5,12 +5,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "test:report": "playwright show-report"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "playwright": "^1.37.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.37.1"
   }
 }
