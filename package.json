@@ -16,6 +16,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chrome-launcher": "^1.0.0",
+    "chrome-remote-interface": "^0.33.0",
     "playwright": "^1.37.1"
   },
   "devDependencies": {
