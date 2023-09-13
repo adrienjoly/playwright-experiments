@@ -6,6 +6,8 @@ const sourceFiles: Record<
   Protocol.Debugger.getScriptSourceReturnValue
 > = {};
 
+const customerScriptIds: string[] = [];
+
 test("guess the number", async ({ page }) => {
   // cf https://playwright.dev/docs/api/class-cdpsession
   const client = await page.context().newCDPSession(page);
@@ -22,17 +24,21 @@ test("guess the number", async ({ page }) => {
       scriptId: opts.scriptId,
     });
     sourceFiles[opts.url] = source;
+    customerScriptIds.push(opts.scriptId);
   });
 
+  await client.send("Profiler.enable");
+  await client.send("Profiler.startPreciseCoverage");
   await page.goto("http://localhost:8080/");
-
-  // const response = await client.send("Animation.getPlaybackRate");
-  // console.log("playback rate is " + response.playbackRate);
-  // await client.send("Animation.setPlaybackRate", {
-  //   playbackRate: response.playbackRate / 2,
-  // });
 
   await page.getByRole("textbox").type("50");
 
   await page.getByRole("button").click();
+
+  const { result } = await client.send("Profiler.takePreciseCoverage");
+  result.forEach(
+    (c) =>
+      customerScriptIds.includes(c.scriptId) &&
+      console.log(c.functions.map((f) => f.ranges))
+  );
 });
