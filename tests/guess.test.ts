@@ -1,12 +1,12 @@
 import { test, expect } from "@playwright/test";
 import type { Protocol } from "playwright-core/types/protocol.d.ts";
 
-const sourceFiles: Record<
-  string,
-  Protocol.Debugger.getScriptSourceReturnValue
-> = {};
+type ScriptId = string;
 
-const customerScriptIds: string[] = [];
+const sourceFiles = new Map<
+  ScriptId,
+  Protocol.Debugger.getScriptSourceReturnValue
+>();
 
 test("guess the number", async ({ page }) => {
   // cf https://playwright.dev/docs/api/class-cdpsession
@@ -23,8 +23,7 @@ test("guess the number", async ({ page }) => {
     const source = await client.send("Debugger.getScriptSource", {
       scriptId: opts.scriptId,
     });
-    sourceFiles[opts.url] = source;
-    customerScriptIds.push(opts.scriptId);
+    sourceFiles.set(opts.scriptId, source);
   });
 
   await client.send("Profiler.enable");
@@ -38,7 +37,7 @@ test("guess the number", async ({ page }) => {
   const { result } = await client.send("Profiler.takePreciseCoverage");
   result.forEach(
     (c) =>
-      customerScriptIds.includes(c.scriptId) &&
+      sourceFiles.has(c.scriptId) &&
       console.log(c.functions.map((f) => f.ranges))
   );
 });
